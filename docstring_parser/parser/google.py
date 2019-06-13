@@ -38,7 +38,9 @@ def _build_meta(text: str, title: str) -> DocstringMeta:
         return DocstringMeta([meta], description=text)
 
     # Split spec and description
-    before, desc = text.split(":", 1)
+    segments = text.split(":", 1)
+    before = segments[0]
+    desc = segments[1] if len(segments) > 1 else None
     if desc:
         desc = desc[1:] if desc[0] == " " else desc
         if "\n" in desc:
