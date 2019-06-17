@@ -1,7 +1,5 @@
 """Common methods for parsing."""
 
-import typing as T
-
 
 class ParseError(RuntimeError):
     """Base class for all parsing related errors."""
@@ -19,7 +17,7 @@ class DocstringMeta:
         :raises ValueError: if something happens
     """
 
-    def __init__(self, args: T.List[str], description: str) -> None:
+    def __init__(self, args, description):
         """
         Initialize self.
 
@@ -30,7 +28,7 @@ class DocstringMeta:
         self.description = description
 
     @classmethod
-    def from_meta(cls, meta: "DocstringMeta") -> T.Any:
+    def from_meta(cls, meta):
         """Copy DocstringMeta from another instance."""
         return cls(args=meta.args, description=meta.description)
 
@@ -39,7 +37,7 @@ class DocstringTypeMeta(DocstringMeta):
     """Docstring meta whose only optional arg contains type information."""
 
     @property
-    def type_name(self) -> T.Optional[str]:
+    def type_name(self):
         """Return type name associated with given docstring metadata."""
         return self.args[1] if len(self.args) > 1 else None
 
@@ -48,7 +46,7 @@ class DocstringParam(DocstringMeta):
     """DocstringMeta symbolizing :param metadata."""
 
     @property
-    def arg_name(self) -> T.Optional[str]:
+    def arg_name(self):
         """Return argument name associated with given param."""
         if len(self.args) > 2:
             return self.args[2]
@@ -57,7 +55,7 @@ class DocstringParam(DocstringMeta):
         return None
 
     @property
-    def type_name(self) -> T.Optional[str]:
+    def type_name(self):
         """Return type name associated with given param."""
         return self.args[1] if len(self.args) > 2 else None
 
@@ -77,16 +75,16 @@ class DocstringRaises(DocstringTypeMeta):
 class Docstring:
     """Docstring object representation."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Intializes self."""
-        self.short_description: T.Optional[str] = None
-        self.long_description: T.Optional[str] = None
+        self.short_description = None
+        self.long_description = None
         self.blank_after_short_description = False
         self.blank_after_long_description = False
-        self.meta: T.List[DocstringMeta] = []
+        self.meta = []
 
     @property
-    def params(self) -> T.List[DocstringParam]:
+    def params(self):
         """Return parameters indicated in docstring."""
         return [
             DocstringParam.from_meta(meta)
@@ -96,7 +94,7 @@ class Docstring:
         ]
 
     @property
-    def raises(self) -> T.List[DocstringRaises]:
+    def raises(self):
         """Return exceptions indicated in docstring."""
         return [
             DocstringRaises.from_meta(meta)
@@ -105,7 +103,7 @@ class Docstring:
         ]
 
     @property
-    def returns(self) -> T.Optional[DocstringReturns]:
+    def returns(self):
         """Return return information indicated in docstring."""
         try:
             return next(

@@ -25,7 +25,7 @@ _titles_re = re.compile(
 _valid = {t for t, a in _sections.items() if a}
 
 
-def _build_meta(text: str, title: str) -> DocstringMeta:
+def _build_meta(text, title):
     """Build docstring element.
 
     :param text: docstring element text
@@ -59,7 +59,7 @@ def _build_meta(text: str, title: str) -> DocstringMeta:
     return DocstringMeta(args, description=desc)
 
 
-def parse(text: str) -> Docstring:
+def parse(text):
     """
     Parse the Google-style docstring into its components.
 
@@ -76,7 +76,7 @@ def parse(text: str) -> Docstring:
     match = _titles_re.search(text)
     if match:
         desc_chunk = text[: match.start()]
-        meta_chunk = text[match.start() :]
+        meta_chunk = text[match.start():]
     else:
         desc_chunk = text
         meta_chunk = ""
@@ -113,7 +113,7 @@ def parse(text: str) -> Docstring:
         # Determine indent
         indent_match = re.search(r"^\s+", chunk)
         if not indent_match:
-            raise ParseError(f'Can\'t infer indent from "{chunk}"')
+            raise ParseError('Can\'t infer indent from "{}"'.format(chunk))
         indent = indent_match.group()
 
         # Check for returns/yeilds (only one element)
@@ -126,7 +126,7 @@ def parse(text: str) -> Docstring:
         _re = "^" + indent + r"(?=\S)"
         c_matches = list(re.finditer(_re, chunk, flags=re.M))
         if not c_matches:
-            raise ParseError(f'No specification for "{title}": "{chunk}"')
+            raise ParseError('No specification for "{}": "{}"'.format(title, chunk))
         c_splits = []
         for j in range(len(c_matches) - 1):
             c_splits.append((c_matches[j].end(), c_matches[j + 1].start()))

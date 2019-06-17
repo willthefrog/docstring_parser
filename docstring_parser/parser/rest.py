@@ -6,7 +6,7 @@ import re
 from .common import Docstring, DocstringMeta, ParseError
 
 
-def parse(text: str) -> Docstring:
+def parse(text):
     """
     Parse the ReST-style docstring into its components.
 
@@ -42,7 +42,7 @@ def parse(text: str) -> Docstring:
         try:
             args_chunk, desc_chunk = chunk.lstrip(":").split(":", 1)
         except ValueError:
-            raise ParseError(f'Error parsing meta information near "{chunk}".')
+            raise ParseError('Error parsing meta information near "{}".'.format(chunk))
         args = args_chunk.split()
         desc = desc_chunk.strip()
         if "\n" in desc:
